@@ -6,13 +6,60 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:rich="http://richfaces.org/rich"
       xmlns:a4j="http://richfaces.org/a4j"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough"  >
+
 <f:view>
     <h:form>
-        <h:outputLabel value="Hello, world"/>
-        <h:inputText id="messageInput" value="#{helloController.message}"/>
-        <h:outputText id="messageLabel" value="#{helloController.message}"/>
-        <a4j:commandButton execute="messageInput" render="messageLabel" value="Submit"/>
+    <h1>Todos</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>
+                    <h:inputText id="messageInput" value="#{helloController.message}" a:placeholder="what needs to be done?" valueChangeListener="#{helloController.onChangedListener}" />
+                    <a4j:commandButton execute="messageInput" value="Submit"/>
+                    <a4j:commandButton execute="table" value="Clear completed" action="#{helloController.clearMessages}"/>
+                </th>
+            </tr>
+            <tr>
+                <th>
+                    <a4j:commandButton execute="table" value="All" action="#{helloController.loadTodoList}">
+                        <f:setPropertyActionListener target="#{helloController.filter}" value="0" render="table" />
+                    </a4j:commandButton>
+                    <a4j:commandButton execute="table" value="Active" action="#{helloController.loadTodoList}">
+                        <f:setPropertyActionListener target="#{helloController.filter}" value="1" render="table" />
+                    </a4j:commandButton>
+                    <a4j:commandButton execute="table" value="Completed" action="#{helloController.loadTodoList}">
+                        <f:setPropertyActionListener target="#{helloController.filter}" value="2" render="table" />
+                    </a4j:commandButton>
+
+                </th>
+            </tr>
+        </thead>
+    </table>
+
+
+
+
+    <rich:dataTable value="#{helloController.todoList}" var="todo" id="table">
+        <rich:column>
+            <f:facet name="header">
+                <h:outputText value="Task"/>
+            </f:facet>
+            <h:selectBooleanCheckbox value = "#{todo.completed}" id="select">
+                    <f:ajax/>
+            </h:selectBooleanCheckbox>
+            <h:outputText value="#{todo.task}"/>
+        </rich:column>
+
+        <rich:column>
+            <f:facet name="header">
+                <h:outputText value="Status"/>
+            </f:facet>
+            <h:outputText value=" #{!todo.completed ? 'active' : 'completed'} "/>
+        </rich:column>
+    </rich:dataTable>
+
     </h:form>
 </f:view>
 </html>

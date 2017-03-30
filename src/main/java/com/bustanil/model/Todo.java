@@ -1,12 +1,12 @@
 package com.bustanil.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Todo {
+    public enum Filter {
+        ALL, ACTIVE, COMPLETED
+    }
 
     private Long id;
     private String task;
