@@ -4,10 +4,6 @@ import javax.persistence.*;
 
 @Entity
 public class Todo {
-    public enum Filter {
-        ALL, ACTIVE, COMPLETED
-    }
-
     private Long id;
     private String task;
     private Boolean completed = false;

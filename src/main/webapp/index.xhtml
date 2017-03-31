@@ -6,34 +6,53 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:rich="http://richfaces.org/rich"
       xmlns:a4j="http://richfaces.org/a4j"
-      xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:a="http://xmlns.jcp.org/jsf/passthrough"  >
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
 
 <f:view>
+    <h:head>
+        <style type="text/css">
+            tr.clickable td {
+                padding: 0;
+            }
+            tr.clickable td a {
+                display: block;
+                padding: 4px;
+            }
+            a{
+                text-decoration:none;
+            }
+        </style>
+    </h:head>
+    <h:body>
     <h:form>
     <h1>Todos</h1>
     <table>
         <thead>
             <tr>
                 <th>
-                    <h:inputText id="messageInput" value="#{helloController.message}" a:placeholder="what needs to be done?" valueChangeListener="#{helloController.onChangedListener}" />
-                    <a4j:commandButton execute="messageInput" value="Submit"/>
-                    <a4j:commandButton execute="table" value="Clear completed" action="#{helloController.clearMessages}"/>
+                    <h:inputText id="messageInput" value="#{helloController.message}"  valueChangeListener="#{helloController.onChangedListener}" >
+                        <rich:placeholder value="what needs to be done?"/>
+                    </h:inputText>
+                    &nbsp;
+                    <a4j:commandButton execute="messageInput" value="Submit" render="table"/>
+                    &nbsp;
+                    <a4j:commandButton execute="table" value="Clear completed" action="#{helloController.clearCompleted}" render="table"/>
                 </th>
             </tr>
             <tr>
-                <th>
-                    <a4j:commandButton execute="table" value="All" action="#{helloController.loadTodoList}">
-                        <f:setPropertyActionListener target="#{helloController.filter}" value="0" render="table" />
-                    </a4j:commandButton>
-                    <a4j:commandButton execute="table" value="Active" action="#{helloController.loadTodoList}">
-                        <f:setPropertyActionListener target="#{helloController.filter}" value="1" render="table" />
-                    </a4j:commandButton>
-                    <a4j:commandButton execute="table" value="Completed" action="#{helloController.loadTodoList}">
-                        <f:setPropertyActionListener target="#{helloController.filter}" value="2" render="table" />
-                    </a4j:commandButton>
-
-                </th>
+                <td>
+                    <a4j:commandLink execute="table" value="All" action='#{helloController.loadTodoList}' render="table">
+                        <a4j:param name="filter" value="0" assignTo="#{helloController.filter}"/>
+                    </a4j:commandLink>
+                    &nbsp;
+                    <a4j:commandLink execute="table" value="Active" action='#{helloController.loadTodoList}' render="table">
+                        <a4j:param name="filter" value="1" assignTo="#{helloController.filter}"/>
+                    </a4j:commandLink>
+                    &nbsp;
+                    <a4j:commandLink execute="table" value="Completed" action='#{helloController.loadTodoList}' render="table">
+                        <a4j:param name="filter" value="2" assignTo="#{helloController.filter}"/>
+                    </a4j:commandLink>
+                </td>
             </tr>
         </thead>
     </table>
@@ -41,15 +60,13 @@
 
 
 
-    <rich:dataTable value="#{helloController.todoList}" var="todo" id="table">
+    <rich:dataTable value="#{helloController.todoList}" var="todo" id="table" rowClasses="clickable">
         <rich:column>
             <f:facet name="header">
                 <h:outputText value="Task"/>
             </f:facet>
-            <h:selectBooleanCheckbox value = "#{todo.completed}" id="select">
-                    <f:ajax/>
-            </h:selectBooleanCheckbox>
-            <h:outputText value="#{todo.task}"/>
+            <a4j:commandLink action="#{helloController.update(todo.id, todo.completed)}" value="#{todo.task}" render="table"/>
+
         </rich:column>
 
         <rich:column>
@@ -61,5 +78,6 @@
     </rich:dataTable>
 
     </h:form>
+    </h:body>
 </f:view>
 </html>

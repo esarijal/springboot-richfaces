@@ -1,6 +1,7 @@
 package com.bustanil;
 
 import com.sun.faces.config.FacesInitializer;
+import org.richfaces.webapp.ResourceServletContainerInitializer;
 import org.springframework.boot.Banner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -31,11 +32,15 @@ public class Application extends SpringBootServletInitializer {
 
             @Override
             public void onStartup(ServletContext servletContext) throws ServletException {
-                FacesInitializer facesInitializer = new FacesInitializer();
 
                 Set<Class<?>> clazz = new HashSet<>();
                 clazz.add(Application.class);
+
+                FacesInitializer facesInitializer = new FacesInitializer();
                 facesInitializer.onStartup(clazz, servletContext);
+
+                ResourceServletContainerInitializer richfacesInitializer = new ResourceServletContainerInitializer();
+                richfacesInitializer.onStartup(clazz, servletContext);
             }
         };
     }

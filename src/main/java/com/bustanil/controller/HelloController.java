@@ -42,9 +42,8 @@ public class HelloController {
     }
 
     public List<Todo> getTodoList(){
-        if(todoList == null){
-            todoList = todoRepository.findAll().stream().filter(t->!t.getCompleted()).collect(Collectors.toList());
-        }
+
+        loadTodoList();
         return todoList;
     }
 
@@ -59,28 +58,42 @@ public class HelloController {
 
         todoRepository.save(todo);
         logger.debug("Task {} was saved", task );
+
     }
 
-    public void clearMessages(){
+    public void clearCompleted(){
 
-        List<Todo> selected = todoList.stream().filter(Todo::getCompleted).collect(Collectors.toList());
-        todoRepository.save(selected);
-        logger.debug("completed {} todo", selected.size());
+        List<Todo> selected = todoRepository.findAllByCompleted(true);
+        todoRepository.delete(selected);
+        logger.debug("deleted {} completed todo", selected.size());
 
     }
 
     public void loadTodoList(){
+        if(filter == null)
+            filter = "0";
         switch (filter){
-            case "0":
-                todoList = todoRepository.findAll();
-                break;
             case "1":
-                todoList = todoRepository.findAllByCompleted(false);
-                break;
+            todoList = todoRepository.findAllByCompleted(false);
+            break;
             case "2":
-                todoList = todoRepository.findAllByCompleted(true);
+            todoList = todoRepository.findAllByCompleted(true);
+            break;
+            default:
+                todoList = todoRepository.findAll();
                 break;
         }
     }
 
+    public void update(Long id, Boolean currentStatus){
+        Todo one = todoRepository.findOne(id);
+        one.setCompleted(!currentStatus);
+        todoRepository.save(one);
+    }
+
+    public void updateTask(Long id, String newTask){
+        Todo one = todoRepository.findOne(id);
+        one.setTask(newTask);
+        todoRepository.save(one);
+    }
 }

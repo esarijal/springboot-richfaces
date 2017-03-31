@@ -58,12 +58,6 @@
             <version>2.2</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/com.sun.el/el-ri -->
-        <dependency>
-            <groupId>com.sun.el</groupId>
-            <artifactId>el-ri</artifactId>
-            <version>1.0</version>
-        </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.richfaces/richfaces -->
         <dependency>
