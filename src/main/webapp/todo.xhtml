@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:rich="http://richfaces.org/rich"
+      xmlns:a4j="http://richfaces.org/a4j"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<f:view>
+    <h:head>
+    </h:head>
+    <h:body>
+        <h:form>
+            <h1>Todos</h1>
+            <div>
+                <h:selectBooleanCheckbox value="#{todoController.selectAll}" rendered="#{!todoController.todoList.isEmpty()}">
+                    <a4j:ajax event="change" execute="@this" render="@form" listener="#{todoController.selectAll}"/>
+                    Select All
+                </h:selectBooleanCheckbox>
+            </div>
+            <ul>
+                <ui:repeat value="#{todoController.todoList}" var="todo">
+                    <li style="list-style: none;">
+                        <h:selectBooleanCheckbox value="#{todo.completed}">
+                            <a4j:ajax event="change" execute="@this" render="@form" listener="#{todoController.updateTask}"/>
+                            <f:attribute name="todoId" value="#{todo.id}"/>
+                        </h:selectBooleanCheckbox>
+                        <rich:inplaceInput value="#{todo.task}" style="#{todo.completed ? 'text-decoration: line-through' : ''}">
+                            <a4j:ajax event="change" execute="@this" render="@form" listener="#{todoController.updateTask}"/>
+                            <f:attribute name="todoId" value="#{todo.id}"/>
+                        </rich:inplaceInput>
+                        <a4j:commandLink value="[X]" action="#{todoController.removeTask(todo)}" render="@form"/>
+                    </li>
+                </ui:repeat>
+            </ul>
+            <h:inputText id="newTask" value="#{todoController.newTask}" >
+                <rich:placeholder value="what needs to be done?"/>
+            </h:inputText>
+            <a4j:commandButton execute="newTask" value="Submit" render="@form" action="#{todoController.addNewTask()}"/>
+
+            <div>
+                <a4j:commandLink value="All" render="@form" action="#{todoController.setFilter('All')}"/> |
+                <a4j:commandLink value="Active" render="@form" action="#{todoController.setFilter('Active')}"/> |
+                <a4j:commandLink value="Completed" render="@form" action="#{todoController.setFilter('Completed')}"/> |
+                <a4j:commandLink value="Clear Completed" render="@form" action="#{todoController.clearCompleted()}" rendered="#{todoController.hasCompletedTodos}"/>
+            </div>
+        </h:form>
+    </h:body>
+</f:view>
+</html>
